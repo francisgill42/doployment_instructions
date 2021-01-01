@@ -1,0 +1,169 @@
+server
+--------------
+
+45.76.106.58
+root
+N6%dWJCxhf$BCSK=
+
+root
+----
+
+cd /var/www/html
+
+to install composer
+-------------------
+
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+
+to install php 7.3 on linux ubuntu
+----------------------------------
+https://www.cloudbooklet.com/how-to-install-php-7-3-on-ubuntu-18-04/
+
+to install nginx on linux ubuntu
+--------------------------------
+https://bmtechtips.com/setup-php-website-with-nginx-on-a-digitalocean.htm
+
+to phpmyadmin on linux ubuntu
+-----------------------------
+https://bmtechtips.com/install-and-secure-phpmyadmin-on-nginx.htm
+
+php extensions
+--------------
+sudo apt install php7.3-common php7.3-mysql php7.3-xml php7.3-xmlrpc php7.3-curl php7.3-gd php7.3-imagick php7.3-cli php7.3-dev php7.3-imap php7.3-mbstring php7.3-opcache php7.3-soap php7.3-zip php7.3-intl -y
+
+
+
+
+
+create mysql user and grant permission
+--------------------------------------
+
+CREATE USER 'francis'@'localhost' IDENTIFIED BY '1@Ab56ab56';
+
+GRANT ALL PRIVILEGES ON * . * TO 'francis'@'localhost';
+
+FLUSH PRIVILEGES;
+
+
+reference link 
+--------------
+https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql
+
+
+
+access phpmyadmin
+------------------
+
+url : http://45.76.106.58/vsdb/index.php
+user : francis
+pass : 1@Ab56ab56
+
+
+
+
+
+sudo nano /etc/nginx/sites-available/default
+
+create subdomain
+----------------
+
+	
+
+sudo mkdir directory
+sudo chown -R www-data:www-data Inv-sys
+sudo chmod -R 755 daof-panel
+sudo nano /etc/nginx/sites-available/daof-backend
+	 then paste below mentioned code
+
+	server { 
+	listen 82;
+	listen [::]:82;	
+	root /var/www/html/Inv-sys/public/;
+	index index.php index.html index.htm index.nginx-debian.html;
+
+	# without underscore/dash/dot
+	server_name 45.76.106.58;
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+	}
+
+
+	location ~ /\.ht {
+		deny all;
+	}
+
+}
+ctrl x => y => enter
+
+sudo ln -s /etc/nginx/sites-available/daof-backend /etc/nginx/sites-enabled/daof-backend
+sudo service nginx restart
++- to check syntax error with line number => nginx -t -c /etc/nginx/nginx.conf
+
+
+then create install
+-------------------
+
+go to the root
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get install python-certbot-nginx
+sudo certbot --nginx
+give your email(abc@gmail.com) and press Enter
+Press A and Enter
+Press Y and Enter
+Now all domains and subdomains list will show in ordered list like (1,2 3,4).
+Select numbers from list which you want to install ssl or leave to apply for all.
+Now Press 2 for redirect htto to https and Enter
+
+
+
+install phpmyadmin
+------------------
+
+sudo apt-get update 
+sudo apt-get install phpmyadmin
+sudo ln -s /usr/share/phpmyadmin /var/www/html/daof-panel/public/
+sudo service php7.3-fpm restart
+cd /var/www/html
+sudo mv phpmyadmin vsdb
+
+
+
+
+
+
+
+--------------------------
+for frontend application install
+
+
+Nodejs Installation 
+-------------------
+
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
+sudo apt-get install -y nodejs
+
+sudo apt install npm	 
+
+
+
+edting conf file
+-----------------
+cd /etc/nginx/site-available
+change root to /var/www/html => /var/www/html/folder_name/dist/
+ctrl x => y => enter
+sudo service nginx restart
+
+cd into project foler
+---------------------
+git clone from repo
+npm i
+npm run generate(for static version)/npm run build
+check your project
